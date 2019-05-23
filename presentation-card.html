@@ -1,0 +1,50 @@
+<html>
+
+<body>
+    <presentation-card></presentation-card>
+</body>
+
+</html>
+<script>
+    class presentationCard extends HTMLElement {
+        constructor() {
+            super();
+
+            let name="alfredo";
+            let lastname="mendoza";
+            let e_mail="alfmenavi@gmail.com";
+            
+            const shadow = this.attachShadow({ mode: 'open' });
+            const div = document.createElement('div');
+            div.textContent = name + "," + lastname + "," + e_mail;
+            shadow.appendChild(div);
+            
+            
+        }
+        connectedCallback() {
+            console.log('Load NuevoElementoWeb agregado');
+            //name="juan";
+            //lastname="perez";
+            //e_mail="jp@gmail.com";
+            
+            
+        }
+
+        disconnectedCallback() {
+            console.log('Removiendo NuevoElementoWeb');
+        }
+
+        attributeChangedCallback(name, oldValue, newValue) {
+            console.log('Cambian propiedades', name, oldValue, newValue);
+        }
+
+        static get observedAttributes() {
+            return ['c', 'l'];
+        }
+
+
+    }
+
+    customElements.define('presentation-card', presentationCard);
+
+</script>
