@@ -1,7 +1,7 @@
 <html>
 
 <body>
-    <presentation-card-admv name='Alfredo' lastname='Mendoza' email='alfmenavi@gmail.com'></presentation-card-admv>
+    <presentation-card-admv name='Alfredo' lastname='Mendoza' email='alfmenav@gmail.com'></presentation-card-admv>
 </body>
 
 </html>
@@ -9,90 +9,66 @@
     class presentationCard extends HTMLElement {
         constructor() {
             super();
+            this.shadow = this.attachShadow({ mode: 'open' });
+            this._name = document.createElement('div');
+            this._lastname = document.createElement('div');
+            this._email = document.createElement('div');
+
+            this.shadow.appendChild(this._name);
+            this.shadow.appendChild(this._lastname);
+            this.shadow.appendChild(this._email);  
         }
         connectedCallback() {
             console.log('Load NuevoElementoWeb agregado');
-            this.createdName(this)
+            console.log(this.shadow)
         }
 
         disconnectedCallback() {
             console.log('Removiendo NuevoElementoWeb');
         }
 
-        attributeChangedCallback(name, oldValue, newValue) {
-            console.log('Cambian propiedades', name, oldValue, newValue);
-            this.updateName(this, name, oldValue, newValue);
-            this.createdName(this);
+        attributeChangedCallback(nameAtributte, oldValue, newValue) {
+            console.log('Cambian propiedades', nameAtributte, oldValue, newValue);
+            console.log(this)
+            console.log(this.shadow)
+
+            if(nameAtributte==='name'){
+                this._name.textContent=newValue
+                if(this._name.textContent==='Alfredo'){
+                    console.log(true)
+                    this._name.textContent='Soy yo'
+                }else{
+                    this._name.textContent='Hola '+newValue+ '!'
+                }
+            }
+            if(nameAtributte==='lastname'){
+                this._lastname.textContent=newValue
+                if(this._lastname.textContent==='Mendoza'){
+                    console.log(true)
+                    this._lastname.textContent=''
+                }else{
+                    this._lastname.textContent=newValue;
+                }
+            }
+            if(nameAtributte==='email'){
+                this._email.textContent=newValue
+                if(this._email.textContent==='alfmenavi@gmail.com'){
+                    console.log(true)
+                    this._email.textContent='Mi correo es: '+ newValue + ' pertenece a Skynet'
+                }else{
+                    let gmail = newValue.search("@gmail.com");
+                    if(gmail!==-1){
+                        this._email.textContent=newValue + ' pertenece a Skynet';
+                    }else{
+                        this._email.textContent=newValue;
+                    }
+                }
+            }            
         }
 
         static get observedAttributes() {
             return ['name', 'lastname', 'email'];
         }
-
-        createdName(elem) {
-            const shadow = this.attachShadow({ mode: 'open' });
-            const _name = document.createElement('div');
-            _name.textContent = elem.getAttribute('name');
-            const _lastname = document.createElement('div');
-            _lastname.textContent = elem.getAttribute('lastname');
-            const _email = document.createElement('div');
-            _email.textContent = elem.getAttribute('email');
-            const aviso = document.createElement('div');
-            shadow.appendChild(_name);
-            shadow.appendChild(_lastname);
-            shadow.appendChild(_email);
-            shadow.appendChild(aviso);
-        }
-
-        updateName(elem, name, oldValue, newValue) {
-            //console.log(elem.shadowRoot)
-            //console.log(name)
-            console.log(oldValue);
-            console.log(newValue);
-            let shadow = elem.shadowRoot;
-            let childNodes = shadow.childNodes;
-            console.log(childNodes);
-            for (var i = 0; i < childNodes.length; i++) {
-                //console.log(childNodes[i])
-                if (name === 'name') {
-                    if (i === 0) {
-                        console.log(childNodes[i]);
-                        childNodes[i].innerHTML = newValue;
-                    }
-
-                } else if (name === 'lastname') {
-                    if (i === 1) {
-                        console.log(childNodes[i])
-                        childNodes[i].innerHTML = newValue;
-                    }
-                } else if (name === 'email') {
-                    if (i === 2) {
-                        //console.log(childNodes[i])
-                        childNodes[i].innerHTML = newValue;
-                    }
-                }
-
-            }
-            console.log(elem.getAttribute('name'))
-            if (elem.getAttribute('name') === 'Alfredo' && elem.getAttribute('lastname') === 'Mendoza' && elem.getAttribute('email') === 'alfmenavi@gmail.com') {
-
-                childNodes[3].textContent = 'Soy yo ' + ' mi correo es: ' + elem.getAttribute('email') + '  pertenece a Skynet';
-
-            } else {
-
-                let gmail = elem.getAttribute('email');
-                gmail = gmail.search("@gmail.com");
-                console.log(gmail);
-                if (gmail !== -1) {
-                    childNodes[3].textContent = 'Hola ' + elem.getAttribute('name') + ' ' + elem.getAttribute('lastname') + '!' + ' tu correo es: ' + elem.getAttribute('email') + '  pertenece a Skynet';
-                } else {
-                    childNodes[3].textContent = 'Hola ' + elem.getAttribute('name') + ' ' + elem.getAttribute('lastname') + '!' + ' tu correo es: ' + elem.getAttribute('email');
-                }
-
-            }
-
-        }
-
     }
 
     customElements.define('presentation-card-admv', presentationCard);
