@@ -1,7 +1,7 @@
 <html>
 
 <body>
-    <presentation-card></presentation-card>
+    <presentation-card-admv name='Alfredo' lastname='Mendoza' email='alfmenavi@gmail.com'></presentation-card-admv>
 </body>
 
 </html>
@@ -10,24 +10,10 @@
         constructor() {
             super();
 
-            let name="alfredo";
-            let lastname="mendoza";
-            let e_mail="alfmenavi@gmail.com";
-            
-            const shadow = this.attachShadow({ mode: 'open' });
-            const div = document.createElement('div');
-            div.textContent = name + "," + lastname + "," + e_mail;
-            shadow.appendChild(div);
-            
-            
         }
         connectedCallback() {
             console.log('Load NuevoElementoWeb agregado');
-            //name="juan";
-            //lastname="perez";
-            //e_mail="jp@gmail.com";
-            
-            
+            this.createdName(this)
         }
 
         disconnectedCallback() {
@@ -36,15 +22,99 @@
 
         attributeChangedCallback(name, oldValue, newValue) {
             console.log('Cambian propiedades', name, oldValue, newValue);
+            this.updateName(this, name, oldValue, newValue)
+            this.createdName(this)
         }
 
         static get observedAttributes() {
-            return ['c', 'l'];
+            return ['name', 'lastname', 'email'];
         }
 
+        createdName(elem) {
+            console.log()
+
+            const shadow = this.attachShadow({ mode: 'open' });
+            const _name = document.createElement('div');
+            _name.textContent = elem.getAttribute('name')
+            const _lastname = document.createElement('div');
+            _lastname.textContent = elem.getAttribute('lastname')
+            const _email = document.createElement('div');
+            _email.textContent = elem.getAttribute('email')
+            const aviso = document.createElement('div');
+
+            shadow.appendChild(_name);
+            shadow.appendChild(_lastname);
+            shadow.appendChild(_email);
+            shadow.appendChild(aviso)
+
+
+        }
+
+        updateName(elem, name, oldValue, newValue) {
+            //console.log(elem.shadowRoot)
+            //console.log(name)
+            console.log(oldValue)
+            console.log(newValue)
+
+            let shadow = elem.shadowRoot
+            let childNodes = shadow.childNodes;
+
+            console.log(childNodes)
+            for (var i = 0; i < childNodes.length; i++) {
+
+                //console.log(childNodes[i])
+                if (name === 'name') {
+                    if (i === 0) {
+                        console.log(childNodes[i])
+                        childNodes[i].innerHTML = newValue
+                    }
+
+                } else if (name === 'lastname') {
+
+                    if (i === 1) {
+                        console.log(childNodes[i])
+                        childNodes[i].innerHTML = newValue
+                    }
+
+                } else if (name === 'email') {
+
+                    if (i === 2) {
+                        //console.log(childNodes[i])
+                        childNodes[i].innerHTML = newValue
+                    }
+
+                }
+
+            }
+
+            console.log(elem.getAttribute('name'))
+
+
+
+            if (elem.getAttribute('name') === 'Alfredo' && elem.getAttribute('lastname') === 'Mendoza' && elem.getAttribute('email') === 'alfmenavi@gmail.com') {
+
+                childNodes[3].textContent = 'Soy yo ' + ' mi correo es: ' + elem.getAttribute('email') + '  pertenece a Skynet'
+
+            } else {
+                let gmail = elem.getAttribute('email')
+
+                gmail = gmail.search("@gmail.com")
+
+                console.log(gmail)
+
+                if (gmail !== -1) {
+                    childNodes[3].textContent = 'Hola ' + elem.getAttribute('name') + ' ' + elem.getAttribute('lastname') + '!' + ' tu correo es: ' + elem.getAttribute('email') + '  pertenece a Skynet'
+
+                } else {
+                    childNodes[3].textContent = 'Hola ' + elem.getAttribute('name') + ' ' + elem.getAttribute('lastname') + '!' + ' tu correo es: ' + elem.getAttribute('email')
+                }
+
+            }
+
+        }
 
     }
 
-    customElements.define('presentation-card', presentationCard);
+    customElements.define('presentation-card-admv', presentationCard);
 
 </script>
